@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 20190114021801) do
 
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci" do |t|
-    t.integer "title"
+    t.string "title", limit: 50
     t.float "price", limit: 24
     t.integer "inventory_count"
     t.datetime "created_at", null: false
