@@ -5,10 +5,7 @@ import com.shop.ShopMe.models.ShoppingCart;
 import com.shop.ShopMe.services.ProductService;
 import com.shop.ShopMe.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -18,18 +15,18 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PutMapping("/add-to-cart")
-    void addItemToCart(@RequestParam long userId, @RequestParam long productId, @RequestParam long quantity){
+    @PutMapping("/{userId}/add-to-cart")
+    void addItemToCart(@PathVariable long userId, @RequestParam long productId, @RequestParam long quantity){
          userService.addToCart(userId,productId, quantity);
     }
 
-    @GetMapping("/cart")
-    ShoppingCart getCart(@RequestParam long userId){
+    @GetMapping("/{userId}/cart")
+    ShoppingCart getCart(@PathVariable long userId){
         return userService.getCart(userId);
     }
 
-    @PutMapping("/remove-from-cart")
-    void removeFromCart(@RequestParam long userId, @RequestParam long productId, @RequestParam(required = false) Boolean removeAll, @RequestParam(required = false) Long quantity){
+    @PutMapping("/{userId}/remove-from-cart")
+    void removeFromCart(@PathVariable long userId, @RequestParam long productId, @RequestParam(required = false) Boolean removeAll, @RequestParam(required = false) Long quantity){
         if(removeAll){
             userService.removeAllFromCart(userId, productId);
         }else {
@@ -37,8 +34,8 @@ public class UserController {
         }
     }
 
-    @PutMapping("/checkout")
-    String checkout(@RequestParam long userId){
+    @PutMapping("/{userId}/checkout")
+    String checkout(@PathVariable long userId){
         return userService.checkout(userId);
     }
 }

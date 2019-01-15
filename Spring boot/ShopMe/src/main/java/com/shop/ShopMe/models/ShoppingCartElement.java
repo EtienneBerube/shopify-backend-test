@@ -2,6 +2,8 @@ package com.shop.ShopMe.models;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
+
 
 @Entity
 @Table(name = "shopping_cart_elements")
@@ -48,5 +50,15 @@ public class ShoppingCartElement {
 
     public float getValue(){
         return product.getPrice()*quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShoppingCartElement that = (ShoppingCartElement) o;
+        return id == that.id &&
+                quantity == that.quantity &&
+                Objects.equals(product, that.product);
     }
 }

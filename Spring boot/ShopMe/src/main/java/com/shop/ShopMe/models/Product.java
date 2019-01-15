@@ -1,6 +1,7 @@
 package com.shop.ShopMe.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="products")
@@ -57,5 +58,16 @@ public class Product {
 
     public void setInventory_count(long inventory_count) {
         this.inventory_count = inventory_count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+                Float.compare(product.price, price) == 0 &&
+                inventory_count == product.inventory_count &&
+                Objects.equals(title, product.title);
     }
 }
