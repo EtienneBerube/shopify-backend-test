@@ -1,10 +1,11 @@
 package com.shop.ShopMe.controllers;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.shop.ShopMe.models.ShoppingCart;
 import com.shop.ShopMe.services.ProductService;
 import com.shop.ShopMe.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,11 @@ public class UserController {
          userService.addToCart(userId,productId, quantity);
     }
 
+    @GetMapping("/cart")
+    ShoppingCart getCart(@RequestParam long userId){
+        return userService.getCart(userId);
+    }
+
     @PutMapping("/remove-from-cart")
     void removeFromCart(@RequestParam long userId, @RequestParam long productId, @RequestParam(required = false) Boolean removeAll, @RequestParam(required = false) Long quantity){
         if(removeAll){
@@ -32,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/checkout")
-    void checkout(@RequestParam long userId){
-        userService.checkout(userId);
+    String checkout(@RequestParam long userId){
+        return userService.checkout(userId);
     }
 }

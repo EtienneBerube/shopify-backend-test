@@ -38,6 +38,7 @@ public class ShopMeApplication {
             productRepository.save(new Product("Sneakers",199.0F, 7));
             productRepository.save(new Product("Cap",25.4F, 8));
             productRepository.save(new Product("Dragon",100000.0F, 1));
+            productRepository.save(new Product("Holy Grail",1000000000.0F, 0));
 
             userRepository.save(new User("Jessy J", new ShoppingCart()));
             userRepository.save(new User("Greg G", new ShoppingCart()));

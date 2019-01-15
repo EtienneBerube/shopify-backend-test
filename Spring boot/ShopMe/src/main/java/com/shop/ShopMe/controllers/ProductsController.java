@@ -17,11 +17,11 @@ public class ProductsController {
     ProductService productService;
 
     @GetMapping("/products")
-    public List<Product> getAllProducts(@RequestParam Boolean showOnlyAvailable){
-        if(showOnlyAvailable){
-            return productService.getAllProducts();
-        }else{
+    public List<Product> getAllProducts(@RequestParam(required = false) Boolean showOnlyAvailable){
+        if(showOnlyAvailable != null && showOnlyAvailable){
             return productService.getAllAvailableProducts();
+        }else{
+            return productService.getAllProducts();
         }
 
     }

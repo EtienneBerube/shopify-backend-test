@@ -12,6 +12,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAll();
 
-    @Query("select p from Product where t.inventory_count > 0")
+    @Query("select p from Product p where p.inventory_count > 0")
     List<Product> findAllAvailableProducts();
 }

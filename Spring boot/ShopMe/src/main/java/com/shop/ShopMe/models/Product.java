@@ -16,7 +16,7 @@ public class Product {
     private float price;
 
     @Column
-    private int inventory_count;
+    private long inventory_count;
 
     public Product() {
     }
@@ -51,11 +51,11 @@ public class Product {
         this.price = price;
     }
 
-    public int getInventory_count() {
+    public long getInventory_count() {
         return inventory_count;
     }
 
-    public void setInventory_count(int inventory_count) {
+    public void setInventory_count(long inventory_count) {
         this.inventory_count = inventory_count;
     }
 }
