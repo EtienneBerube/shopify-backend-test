@@ -3,10 +3,7 @@ package com.shop.ShopMe.controllers;
 import com.shop.ShopMe.models.Product;
 import com.shop.ShopMe.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +26,10 @@ public class ProductsController {
     @GetMapping("/products/{id}")
     public Product getProductById(@PathVariable(value="id") long id){
         return productService.getProductById(id);
+    }
+
+    @PostMapping("/products/new")
+    public void createProduct(@RequestBody Product product){
+        productService.createProduct(product);
     }
 }

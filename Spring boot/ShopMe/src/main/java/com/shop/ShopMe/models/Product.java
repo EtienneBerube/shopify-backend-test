@@ -1,5 +1,10 @@
 package com.shop.ShopMe.models;
 
+import com.shop.ShopMe.utils.generators.UseIdOrGenerate;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,8 +12,11 @@ import java.util.Objects;
 @Table(name="products")
 public class Product {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY, generator="IdOrGenerated")
+    @GenericGenerator(name="IdOrGenerated",
+            strategy="com.shop.ShopMe.utils.generators.UseIdOrGenerate"
+    )
+    private Long id;
 
     @Column
     private String title;
@@ -28,11 +36,18 @@ public class Product {
         this.inventory_count = inventory_count;
     }
 
-    public long getId() {
+    public Product(long id, String title, float price, int inventory_count) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.inventory_count = inventory_count;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,5 +84,10 @@ public class Product {
                 Float.compare(product.price, price) == 0 &&
                 inventory_count == product.inventory_count &&
                 Objects.equals(title, product.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, price, inventory_count);
     }
 }

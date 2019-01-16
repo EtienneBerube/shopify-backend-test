@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
 
     @Autowired
     ProductRepository productRepository;
@@ -22,7 +22,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(long id) {
-        return productRepository.findById(id).get();
+        Product toReturn;
+        try{
+            toReturn = productRepository.findById(id).get();
+        }catch(NoSuchElementException ex){
+            toReturn = null;
+        }
+        return toReturn;
+    }
+
+    @Override
+    public void createProduct(Product p) {
+        productRepository.save(p);
     }
 
     @Override
