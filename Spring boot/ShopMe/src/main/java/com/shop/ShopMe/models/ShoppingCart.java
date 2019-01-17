@@ -67,7 +67,7 @@ public class ShoppingCart {
         if(toRemove.size() == 1){
             ShoppingCartElement item = toRemove.get(0);
 
-            if(item.getQuantity()-quantity < 0){
+            if(item.getQuantity()-quantity > 0){
                 //Decrease by the desired quantity
                 item.setQuantity(item.getQuantity()-quantity);
             }else{

@@ -115,4 +115,8 @@ public class UserServiceImpl implements UserService {
         return currentUser.getShoppingCart();
     }
 
+    @Override
+    public void createUser(String name) {
+        userRepository.save(new User(name, new ShoppingCart()));
+    }
 }

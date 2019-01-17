@@ -10,11 +10,14 @@ import com.shop.ShopMe.repositories.UserRepository;
 import com.shop.ShopMe.utils.exceptions.NotEnoughInInventoryException;
 import net.bytebuddy.asm.Advice;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +35,22 @@ public class UserControllerIT {
     @Autowired
     ProductRepository productRepository;
 
+    @Before
+    public void replenishProductTested(){
+        Product toReplenish = productRepository.findById(1L).get();
+        toReplenish.setInventory_count(3);
+        productRepository.save(toReplenish);
+    }
+
+    @Before
+    public void clearCart(){
+        User user = userRepository.findById(1L).get();
+
+        user.getShoppingCart().setElements(new ArrayList<>());
+
+        userRepository.save(user);
+    }
+
     @Test
     public void can_add_item(){
         userController.addItemToCart(1,1,1);
@@ -42,7 +61,6 @@ public class UserControllerIT {
         Assert.assertEquals(currentShoppingCart.getElements().get(0).getProduct(),expected);
     }
 
-    //TODO add assertThrown for Junit 4
     @Test(expected = NotEnoughInInventoryException.class)
     public void cannot_add_item_with_not_enough_inventory(){
         userController.addItemToCart(1,1,5);
@@ -51,9 +69,10 @@ public class UserControllerIT {
     @Test
     public void can_remove_quantity_item(){
         userController.addItemToCart(1,1,2);
-        ShoppingCart currentShoppingCart = userController.getCart(1);
         Product expected = productsController.getProductById(1);
         userController.removeFromCart(1,1,false,1L);
+
+        ShoppingCart currentShoppingCart = userController.getCart(1);
 
         Assert.assertEquals(1, currentShoppingCart.getElements().size());
         Assert.assertEquals(expected.getPrice(), currentShoppingCart.getTotal_price(), 0.0);
@@ -67,21 +86,6 @@ public class UserControllerIT {
 
         Assert.assertEquals(0, currentShoppingCart.getElements().size());
         Assert.assertEquals(0F, currentShoppingCart.getTotal_price(), 0.0);
-    }
-
-    @Test
-    public void can_checkout(){
-        userController.addItemToCart(1,1,1);
-        Product product = productsController.getProductById(1);
-
-        String status = userController.checkout(1);
-        String expected = "Success (Qt): "+product.getTitle()+"(1), Unsuccessful (Qt):";
-
-        ShoppingCart shoppingCart = userController.getCart(1);
-
-        Assert.assertEquals(0, shoppingCart.getElements().size());
-        Assert.assertEquals(0, shoppingCart.getTotal_price(),0);
-        Assert.assertEquals(status, expected);
     }
 
     @Test
@@ -105,6 +109,23 @@ public class UserControllerIT {
         Assert.assertEquals(product.getPrice()*3, shoppingCart.getTotal_price(),0.001);
         Assert.assertEquals(status, expected);
     }
+
+    @Test
+    public void can_checkout(){
+        userController.addItemToCart(1,1,1);
+        Product product = productsController.getProductById(1);
+
+        String status = userController.checkout(1);
+        String expected = "Success (Qt): "+product.getTitle()+"(1), Unsuccessful (Qt):";
+
+        ShoppingCart shoppingCart = userController.getCart(1);
+
+        Assert.assertEquals(0, shoppingCart.getElements().size());
+        Assert.assertEquals(0, shoppingCart.getTotal_price(),0);
+        Assert.assertEquals(status, expected);
+    }
+
+
 
 
 }

@@ -30,12 +30,17 @@ public class UserController {
         if(removeAll){
             userService.removeAllFromCart(userId, productId);
         }else {
-            userService.addToCart(userId, productId, quantity);
+            userService.removeFromCart(userId, productId, quantity);
         }
     }
 
     @PutMapping("/{userId}/checkout")
     public String checkout(@PathVariable long userId){
         return userService.checkout(userId);
+    }
+
+    @PostMapping("/user/new")
+    public void createUser(@RequestParam String name){
+        userService.createUser(name);
     }
 }

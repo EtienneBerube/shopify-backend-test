@@ -1,11 +1,6 @@
 package com.shop.ShopMe.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.shop.ShopMe.models.ShoppingCart;
-import com.shop.ShopMe.repositories.ProductRepository;
-import com.shop.ShopMe.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 
 public interface UserService {
@@ -14,4 +9,5 @@ public interface UserService {
     void removeAllFromCart(long userId, long productId);
     String checkout(long userId);
     ShoppingCart getCart(long userId);
+    void createUser(String name);
 }
