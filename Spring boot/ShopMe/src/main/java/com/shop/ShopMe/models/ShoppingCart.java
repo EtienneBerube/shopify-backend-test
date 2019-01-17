@@ -19,7 +19,7 @@ public class ShoppingCart {
     @Column
     private float total_price;
 
-    @OneToMany(targetEntity = ShoppingCartElement.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ShoppingCartElement.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<ShoppingCartElement> elements;
 
     public ShoppingCart() {

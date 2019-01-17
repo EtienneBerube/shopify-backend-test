@@ -20,7 +20,6 @@ public class ProductsController {
         }else{
             return productService.getAllProducts();
         }
-
     }
 
     @GetMapping("/products/{id}")

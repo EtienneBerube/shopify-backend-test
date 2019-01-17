@@ -16,17 +16,17 @@ public class UserController {
     UserService userService;
 
     @PutMapping("/{userId}/add-to-cart")
-    void addItemToCart(@PathVariable long userId, @RequestParam long productId, @RequestParam long quantity){
+    public void addItemToCart(@PathVariable long userId, @RequestParam long productId, @RequestParam long quantity){
          userService.addToCart(userId,productId, quantity);
     }
 
     @GetMapping("/{userId}/cart")
-    ShoppingCart getCart(@PathVariable long userId){
+    public ShoppingCart getCart(@PathVariable long userId){
         return userService.getCart(userId);
     }
 
     @PutMapping("/{userId}/remove-from-cart")
-    void removeFromCart(@PathVariable long userId, @RequestParam long productId, @RequestParam(required = false) Boolean removeAll, @RequestParam(required = false) Long quantity){
+    public void removeFromCart(@PathVariable long userId, @RequestParam long productId, @RequestParam(required = false) Boolean removeAll, @RequestParam(required = false) Long quantity){
         if(removeAll){
             userService.removeAllFromCart(userId, productId);
         }else {
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/checkout")
-    String checkout(@PathVariable long userId){
+    public String checkout(@PathVariable long userId){
         return userService.checkout(userId);
     }
 }

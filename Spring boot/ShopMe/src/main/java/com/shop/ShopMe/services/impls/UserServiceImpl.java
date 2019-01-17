@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
         if(currentUser == null || productToAdd == null) throw  new BadParametersException();
 
-        if(productToAdd.getInventory_count() < quantity) throw new NotEnoughInInventoryException(productToAdd.getTitle(),productToAdd.getInventory_count(),quantity);
+        if(productToAdd.getInventory_count() < quantity) throw new NotEnoughInInventoryException(productToAdd.getTitle(),quantity,productToAdd.getInventory_count());
         currentUser.getShoppingCart().addItem(productToAdd, quantity);
 
         this.userRepository.save(currentUser);
@@ -67,12 +67,15 @@ public class UserServiceImpl implements UserService {
 
         StringBuilder toReturn = new StringBuilder("");
 
-        StringBuilder unsuccessful = new StringBuilder("Success (Qt): ");
-        StringBuilder successful = new StringBuilder("Unsuccessful (Qt):");
+        StringBuilder successful = new StringBuilder("Success (Qt): ");
+        StringBuilder unsuccessful = new StringBuilder(" Unsuccessful (Qt):");
 
         if(currentUser == null) throw  new BadParametersException();
 
         if(currentUser.getShoppingCart().getElements().size() == 0) throw new EmptyCartException();
+
+        //Used to bypass Concurrent modification error in forEach()
+        List<ShoppingCartElement> toRemove = new ArrayList<>();
 
         currentUser.getShoppingCart().getElements().forEach((shoppingCartElement -> {
             if(shoppingCartElement.getQuantity() <= shoppingCartElement.getProduct().getInventory_count()){
@@ -81,13 +84,20 @@ public class UserServiceImpl implements UserService {
                 product.setInventory_count(product.getInventory_count() - shoppingCartElement.getQuantity());
                 productRepository.save(product);
 
-                currentUser.getShoppingCart().removeItem(shoppingCartElement);
-                successful.append(shoppingCartElement.getProduct() + "("+shoppingCartElement.getQuantity()+"),");
+                toRemove.add(shoppingCartElement);
+                successful.append(shoppingCartElement.getProduct().getTitle() + "("+shoppingCartElement.getQuantity()+"),");
 
             }else{
-                unsuccessful.append(shoppingCartElement.getProduct() + "("+shoppingCartElement.getQuantity()+"),");
+                unsuccessful.append(shoppingCartElement.getProduct().getTitle() + "("+shoppingCartElement.getQuantity()+"),");
             }
         }));
+
+
+        toRemove.forEach(shoppingCartElement -> {
+            currentUser.getShoppingCart().removeItem(shoppingCartElement);
+        });
+
+        //Create Return statement
 
         toReturn.append(successful).append(unsuccessful);
 
